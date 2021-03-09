@@ -46,6 +46,7 @@ def union(parent, rank, x, y):
 
 def Kruskals(apple_locations, starting_location):
     forest = []
+    traversed = []
     edge_weight = get_edge_weights(apple_locations)
     sorted_edges = sort_edge_weights(edge_weight)
     s_i = 0
@@ -65,9 +66,12 @@ def Kruskals(apple_locations, starting_location):
         x = find(parent, u)
         y = find(parent, v)
         if x!=y:
-            f_i = f_i + 1
-            forest.append([u,v,w])
-            union(parent, rank, x, y)
+            if traversed.count(u) < 2 and traversed.count(v) < 2:
+                traversed.append(u)
+                traversed.append(v)
+                f_i = f_i + 1
+                forest.append([u,v,w])
+                union(parent, rank, x, y)
 
     minimumCost = 0
     print("Edges in the constructed MST")
@@ -79,7 +83,18 @@ def Kruskals(apple_locations, starting_location):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    apple_locations = [[0,1,1],[2,2,2],[3,2,4],[3,3,5],[2,4,5],[0,5,6],[1,5,5]]
+    apple_locations = [[  1.0, 98.,  63.],
+ [ 74., 10., 20.],
+ [ 74. , 72.,  60.],
+ [ 63. , 40.,  51.],
+ [ 58. ,  3.  ,95.],
+ [ 58.  ,10.  ,35.],
+ [ 25.  , 6.  ,43.],
+ [ 21. , 59.  ,14.],
+ [ 97. , 84.  ,29.],
+ [  4. ,100.  ,97.],
+ [ 28. , 20. , 61.]]
+# [1,1,1],[1,1,0],[1,1,2],[1,0,1],[1,2,1],[0,5,6],[1,5,5]]
     starting_position = [0,0,0]
     Kruskals(apple_locations, starting_position)
 

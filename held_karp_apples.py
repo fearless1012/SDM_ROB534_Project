@@ -58,14 +58,14 @@ def held_karp_apples(apple_locations, starting_location):
             #generate all combinations of nodes to visit
             #for each set
             for subset in itertools.combinations(range(0,n), k):
-                print("checking subset: {}".format(subset))
+                # print("checking subset: {}".format(subset))
                 curr_set_index += 1
                 S[str(subset)] = curr_set_index
                 set_p =  []
                 set_g = []
                 #for each apple
                 for apple in range(0,n):
-                    print("checking apple: {}".format(apple))
+                    # print("checking apple: {}".format(apple))
                     if apple not in subset:
                         [cost, pointer] = get_path(apple, subset, D, S, G)
                         set_p.append(pointer)
@@ -112,6 +112,8 @@ def get_path(apple,subset,distances,set_dict, costs):
                     cost = subpath_cost
     print("optimal cost of going to apple {} visiting {} is {}".format(apple,subset,cost))
     return(cost, prev)
-    
-                
-        
+
+if __name__ == '__main__':
+    apple_locations = [[0,1,1],[2,2,2],[3,2,4],[3,3,5],[2,4,5],[0,5,6],[1,5,5]]
+    starting_position = [0,0,0]
+    held_karp_apples(apple_locations, starting_position)
