@@ -114,6 +114,17 @@ def get_path(apple,subset,distances,set_dict, costs):
     return(cost, prev)
 
 if __name__ == '__main__':
-    apple_locations = [[0,1,1],[2,2,2],[3,2,4],[3,3,5],[2,4,5],[0,5,6],[1,5,5]]
+    # apple_locations = [[0,1,1],[2,2,2],[3,2,4],[3,3,5],[2,4,5],[0,5,6],[1,5,5]]
+    apple_locations = [[1.0, 98., 63.],
+                       [74., 10., 20.],
+                       [74., 72., 60.],
+                       [63., 40., 51.],
+                       [58., 3., 95.],
+                       [58., 10., 35.],
+                       [25., 6., 43.],
+                       [21., 59., 14.],
+                       [97., 84., 29.],
+                       [4., 100., 97.],
+                       [28., 20., 61.]]
     starting_position = [0,0,0]
     held_karp_apples(apple_locations, starting_position)
