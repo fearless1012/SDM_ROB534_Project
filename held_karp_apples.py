@@ -127,4 +127,5 @@ if __name__ == '__main__':
                        [4., 100., 97.],
                        [28., 20., 61.]]
     starting_position = [0,0,0]
-    held_karp_apples(apple_locations, starting_position)
+    a = held_karp_apples(apple_locations, starting_position)
+    print(a)
