@@ -74,9 +74,6 @@ def Kruskals(apple_locations, starting_location):
 
         if x!=y:
             if (u != starting_location_index and v != starting_location_index and traversed.count(u) < 2 and traversed.count(v) < 2) or ((u == starting_location_index or v == starting_location_index) and traversed.count(starting_location_index)<1 and traversed.count(u) < 2 and traversed.count(v) < 2):
-                    if u == 6 or v==6:
-                        print(traversed.count(u))
-                        print(traversed.count(v))
                     traversed.append(u)
                     traversed.append(v)
                     f_i = f_i + 1
@@ -113,7 +110,6 @@ def Kruskals(apple_locations, starting_location):
             path_unsorted_nodeb.pop(index)
             path_unsorted_nodea.pop(index)
 
-
     node_b = forest[0][1]
 
     # print("here")
@@ -148,9 +144,9 @@ def Kruskals(apple_locations, starting_location):
 
 
 
-    for u,v, w in forest:
-        # minimumCost += w
-        print(u, v, w)
+    # for u,v, w in forest:
+    #     # minimumCost += w
+    #     print(u, v, w)
 
     print("Minimum cost : ", minimumCost)
     print(path)
@@ -170,7 +166,7 @@ if __name__ == '__main__':
  [  4,100, 97],
  [ 28, 20, 61]]
 # [1,1,1],[1,1,0],[1,1,2],[1,0,1],[1,2,1],[0,5,6],[1,5,5]]
-    starting_position = [0,0,0]
+    starting_position = [58,3,95]
     Kruskals(apple_locations, starting_position)
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
