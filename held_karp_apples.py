@@ -45,6 +45,7 @@ def held_karp_apples(apple_locations, starting_location):
     
     #for each set size
     for k in range(0,n):
+        #print("Finding paths of size {}".format(k))
         if (k==0):
             set_p = []
             set_g = []
@@ -58,29 +59,34 @@ def held_karp_apples(apple_locations, starting_location):
             #generate all combinations of nodes to visit
             #for each set
             for subset in itertools.combinations(range(0,n), k):
-                # print("checking subset: {}".format(subset))
+                #print("checking subset: {}".format(subset))
                 curr_set_index += 1
                 S[str(subset)] = curr_set_index
                 set_p =  []
                 set_g = []
                 #for each apple
                 for apple in range(0,n):
-                    # print("checking apple: {}".format(apple))
+                    #print("checking apple: {}".format(apple))
                     if apple not in subset:
                         [cost, pointer] = get_path(apple, subset, D, S, G)
+                        #print(apple)
+                        #print(pointer)
                         set_p.append(pointer)
                         set_g.append(cost)
                         if (k == n-1) and (cost < final_cost):
                             final_cost = cost
                             end_apple = apple
                             final_pointer = pointer
+                            #print(final_pointer)
+                            #print(k)
                     else:
                         set_g.append(0)
                         set_p.append(["invalid", "invalid"])
                 P.append(set_p)
                 G.append(set_g)
-                print("All apples visited for this subset")
+                #print("All apples visited for this subset")
     print("Final Apple: {} from {}".format(end_apple, final_pointer[0]))
+    print("Final Cost: {}".format(final_cost))
     curr_pointer = final_pointer
     path.append(apple_locations[end_apple].tolist())
     while not path_found:
@@ -90,42 +96,32 @@ def held_karp_apples(apple_locations, starting_location):
             path_found = True
         else:
             curr_pointer = P[curr_pointer[1]][curr_pointer[0]]
-    path.reverse()             
+    path.reverse()
+    #print(G)             
     return(path)
 
 def get_path(apple,subset,distances,set_dict, costs):
+    cost = inf
+    prev = "something went wrong"
     for apple_from in subset:
-        cost = inf
-        prev = "something went wrong"
+        #print("this path ends with edge apple {} to apple {}".format(apple_from, apple))
         for sub_subset in itertools.combinations(subset, len(subset)-1):
             index_to_check = "invalid"
             if apple_from not in sub_subset:                
                 if len(sub_subset) >= 1:
                     index_to_check = set_dict[str(sub_subset)]
                     sub_subpath_cost = costs[index_to_check][apple_from]
+                    #print("cost of optimal subpath was {}".format(sub_subpath_cost))
                     subpath_cost = distances[apple][apple_from] + sub_subpath_cost
+                    #print("new cost is {}".format(subpath_cost))
                 else:
-                    subpath_cost = distances[apple][apple_from]
+                    subpath_cost = distances[apple][apple_from] + costs[0][apple_from]
                     index_to_check = 0
                 if subpath_cost < cost:
                     prev = [apple_from, index_to_check]
                     cost = subpath_cost
-    print("optimal cost of going to apple {} visiting {} is {}".format(apple,subset,cost))
+    #print("optimal cost of going to apple {} visiting {} is {}".format(apple,subset,cost))
     return(cost, prev)
-
-if __name__ == '__main__':
-    # apple_locations = [[0,1,1],[2,2,2],[3,2,4],[3,3,5],[2,4,5],[0,5,6],[1,5,5]]
-    apple_locations = [[1.0, 98., 63.],
-                       [74., 10., 20.],
-                       [74., 72., 60.],
-                       [63., 40., 51.],
-                       [58., 3., 95.],
-                       [58., 10., 35.],
-                       [25., 6., 43.],
-                       [21., 59., 14.],
-                       [97., 84., 29.],
-                       [4., 100., 97.],
-                       [28., 20., 61.]]
-    starting_position = [0,0,0]
-    a = held_karp_apples(apple_locations, starting_position)
-    print(a)
+    
+                
+        
