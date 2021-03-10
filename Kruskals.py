@@ -9,8 +9,6 @@ def get_edge_weights(apple_locations):
     for i in range(len(apple_locations)):
         for j in range(i+1,len(apple_locations)):
             edge_weight[i,j] = math.sqrt((apple_locations[j][0]-apple_locations[i][0])**2 + (apple_locations[j][1]-apple_locations[i][1])**2 + (apple_locations[j][2]-apple_locations[i][2])**2)
-
-    # print((apple_locations[0][0]-apple_locations[9][0])**2 + (apple_locations[0][1]-apple_locations[9][1])**2)
     return edge_weight
 
 def sort_edge_weights(edge_weight):
@@ -48,7 +46,10 @@ def union(parent, rank, x, y):
 def Kruskals(apple_locations, starting_location):
     forest = []
     traversed = []
-    edge_weight = get_edge_weights(apple_locations)
+    all_nodes = apple_locations
+    all_nodes.append(starting_location)
+    starting_location_index = len(all_nodes) - 1
+    edge_weight = get_edge_weights(all_nodes)
     sorted_edges = sort_edge_weights(edge_weight)
     s_i = 0
     f_i = 0
@@ -56,38 +57,91 @@ def Kruskals(apple_locations, starting_location):
     parent = []
     rank = []
     #create subsets with single elements
-    for node in range(len(apple_locations)):
+    for node in range(len(all_nodes)):
         parent.append(node)
         rank.append(0)
-
     minimumCost = 0
-    while f_i < len(apple_locations) - 1 :
+    path_unsorted_nodea = []
+    path_unsorted_nodeb = []
+    # path_trial = np.full(len(all_nodes), np.inf)
+    # path_trial[0] = starting_location_index
+    while f_i < len(all_nodes) - 1:
         u,v = sorted_edges[s_i]
         w = edge_weight[sorted_edges[s_i]]
         s_i = s_i + 1
         x = find(parent, u)
         y = find(parent, v)
-        path_unsorted_nodea = []
-        path_unsorted_nodeb = []
+
         if x!=y:
-            if traversed.count(u) < 2 and traversed.count(v) < 2:
-                traversed.append(u)
-                traversed.append(v)
-                f_i = f_i + 1
-                forest.append([u,v,w])
-                path_unsorted_nodea.append(u)
-                path_unsorted_nodeb.append(v)
-                minimumCost += w
-                union(parent, rank, x, y)
+            if (u != starting_location_index and v != starting_location_index and traversed.count(u) < 2 and traversed.count(v) < 2) or ((u == starting_location_index or v == starting_location_index) and traversed.count(starting_location_index)<1 and traversed.count(u) < 2 and traversed.count(v) < 2):
+                    if u == 6 or v==6:
+                        print(traversed.count(u))
+                        print(traversed.count(v))
+                    traversed.append(u)
+                    traversed.append(v)
+                    f_i = f_i + 1
+                    forest.append([u,v,w])
+                    path_unsorted_nodea.append(u)
+                    path_unsorted_nodeb.append(v)
+
+                    # if u not in path_unsorted_nodea and v not in path_unsorted_nodeb:
+                    #     path_unsorted_nodeb.append(v)
+                    #     path_unsorted_nodea.append(u)
+                    # elif u not in path_unsorted_nodeb and v not in path_unsorted_nodea:
+                    #     path_unsorted_nodeb.append(u)
+                    #     path_unsorted_nodea.append(v)
+                    # elif u in path_unsorted_nodea:
+                    #     index = path_unsorted_nodea.find(u)
+
+
+                    minimumCost += w
+                    union(parent, rank, x, y)
+
+    path = []
+    path.append(starting_location_index)
+    while len(path) < len(all_nodes):
+        if starting_location_index in path_unsorted_nodea:
+            index = path_unsorted_nodea.index(starting_location_index)
+            path.append(path_unsorted_nodeb[index])
+            starting_location_index = path_unsorted_nodeb[index]
+            path_unsorted_nodeb.pop(index)
+            path_unsorted_nodea.pop(index)
+        elif starting_location_index in path_unsorted_nodeb:
+            index = path_unsorted_nodeb.index(starting_location_index)
+            path.append(path_unsorted_nodea[index])
+            starting_location_index = path_unsorted_nodea[index]
+            path_unsorted_nodeb.pop(index)
+            path_unsorted_nodea.pop(index)
+
 
     node_b = forest[0][1]
-    path = []
-    corner_nodes = []
-    for t in range(len(apple_locations)):
-        if traversed.count(t) == 1:
-            corner_nodes.append(t)
 
-    min_path = 1000
+    # print("here")
+    # print(path_unsorted_nodea)
+    # print(path_unsorted_nodeb)
+    final_path = []
+    i =0
+    # while len(final_path) < len(apple_locations):
+
+        # nodeb = path_unsorted_nodeb[i]
+        # final_path.append(path_unsorted_nodea[i])
+        # final_path.append(path_unsorted_nodeb[i])
+        # path_unsorted_nodea.pop(i)
+        # path_unsorted_nodeb.pop(i)
+        # if nodeb in path_unsorted_nodea:
+        #     j = find(path_unsorted_nodea, nodeb)
+        #     if path_unsorted_nodea[j] not in final_path:
+        #         i = j
+        #         continue
+
+
+    # for i in range(len(path_unsorted_nodea)):
+    #     print(path_unsorted_nodea[i])
+    # corner_nodes = []
+    # for t in range(len(apple_locations)):
+    #     if traversed.count(t) == 1:
+    #         corner_nodes.append(t)
+
     # for t in corner_nodes:
 
     # while len(path) < len(forest):
@@ -99,11 +153,12 @@ def Kruskals(apple_locations, starting_location):
         print(u, v, w)
 
     print("Minimum cost : ", minimumCost)
+    print(path)
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    apple_locations = [[  1, 98,  63],
+    apple_locations = [[1, 98,  63],
  [ 74, 10, 20],
  [ 74, 72, 60],
  [ 63, 40, 51],
