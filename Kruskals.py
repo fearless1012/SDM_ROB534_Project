@@ -1,11 +1,12 @@
 import math
 import numpy as np
+import randomMapClass
+import time
+import tracemalloc
 
 
 def get_edge_weights(apple_locations):
-    a = len(apple_locations)
     edge_weight = {}
-    edge_1 = apple_locations[0]
     for i in range(len(apple_locations)):
         for j in range(i+1,len(apple_locations)):
             edge_weight[i,j] = math.sqrt((apple_locations[j][0]-apple_locations[i][0])**2 + (apple_locations[j][1]-apple_locations[i][1])**2 + (apple_locations[j][2]-apple_locations[i][2])**2)
@@ -44,6 +45,7 @@ def union(parent, rank, x, y):
         rank[xroot] += 1
 
 def Kruskals(apple_locations, starting_location):
+    # tracemalloc.start()
     forest = []
     traversed = []
     all_nodes = apple_locations
@@ -110,13 +112,7 @@ def Kruskals(apple_locations, starting_location):
             path_unsorted_nodeb.pop(index)
             path_unsorted_nodea.pop(index)
 
-    node_b = forest[0][1]
 
-    # print("here")
-    # print(path_unsorted_nodea)
-    # print(path_unsorted_nodeb)
-    final_path = []
-    i =0
     # while len(final_path) < len(apple_locations):
 
         # nodeb = path_unsorted_nodeb[i]
@@ -147,26 +143,45 @@ def Kruskals(apple_locations, starting_location):
     # for u,v, w in forest:
     #     # minimumCost += w
     #     print(u, v, w)
-
-    print("Minimum cost : ", minimumCost)
-    print(path)
+    t = time.time() - start_time
+    c = minimumCost
+    return t,c
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    apple_locations = [[1, 98,  63],
- [ 74, 10, 20],
- [ 74, 72, 60],
- [ 63, 40, 51],
- [ 58,  3, 95],
- [ 58, 10, 35],
- [ 25, 6, 43],
- [ 21, 59, 14],
- [ 97, 84, 29],
- [  4,100, 97],
- [ 28, 20, 61]]
+    apple_locations = randomMapClass.coordinates(n_apples=5)
+    # print(apple_locations)
+    # input("wait")
+# [[1, 98,  63],
+#  [ 74, 10, 20],
+#  [ 74, 72, 60],
+#  [ 63, 40, 51],
+#  [ 58,  3, 95],
+#  [ 58, 10, 35],
+#  [ 25, 6, 43],
+#  [ 21, 59, 14],
+#  [ 97, 84, 29],
+#  [  4,100, 97],
+#  [ 28, 20, 61]]
 # [1,1,1],[1,1,0],[1,1,2],[1,0,1],[1,2,1],[0,5,6],[1,5,5]]
     starting_position = [58,3,95]
-    Kruskals(apple_locations, starting_position)
+    stime = []
+    cost = []
+    memory = []
+    for i in range(5):
+        start_time = time.time()
+        tracemalloc.start()
+        t,c= Kruskals(apple_locations, starting_position)
+        m = tracemalloc.get_traced_memory()
+        tracemalloc.stop()
+        memory.append(m[1])
+        stime.append(t)
+        cost.append(c)
+
+    print("Time :", sum(stime)/5)
+    print("Cost :", sum(cost)/5)
+    print("Memory :", sum(memory)/500000)
+
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
